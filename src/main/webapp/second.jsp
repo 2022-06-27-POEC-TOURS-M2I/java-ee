@@ -5,6 +5,6 @@
         <jsp:param name="title" value="Ma seconde page JSP" />
     </jsp:include>
     <body>
-        <h1>Ceci est ma deuxième page JSP</h1>
+        <h1>Aurevoir <%= request.getParameter("name") %> !</h1>
     </body>
 </html>
