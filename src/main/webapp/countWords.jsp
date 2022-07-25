@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <jsp:include page="include/header.jsp">
-        <jsp:param name="title" value="Liste les nombre pair" />
+        <jsp:param name="title" value="Formulaire compteur de mot" />
     </jsp:include>
     <body>
 
