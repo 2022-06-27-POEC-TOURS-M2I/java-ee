@@ -47,19 +47,28 @@ public class DistributorServlet extends HttpServlet {
 
     private void addCredit(HttpServletRequest request) {
 
-        String addOne = request.getParameter("addOne");
-        String addTwo = request.getParameter("addTwo");
+        String credit = request.getParameter("credit");
 
-        if (addOne == null && addTwo == null) {
+        if (credit == null) {
             return;
         }
 
-        int amount = addOne != null ? 1 : 2;
+        try {
+            int amount = Integer.parseInt(credit);
 
-        distributeur.insererArgent(amount);
-        // distributeur.setCredit(distributeur.getCredit() + amount);
+            if (amount < 0) {
+                request.setAttribute("creditError", "Vous ne pouvez pas ajouter un montant négatif");
+                return;
+            }
+
+            distributeur.insererArgent(amount);
+            // distributeur.setCredit(distributeur.getCredit() + Integer.parseInt(amount));
+            request.setAttribute("creditError", null);
+        } catch (Exception e) {
+            request.setAttribute("creditError", "Une erreur est survenue lors de l'ajout du crédit");
+        }
     }
-    
+
     private void buyProduct(HttpServletRequest request) {
 
         String productId = request.getParameter("productId");
@@ -68,7 +77,29 @@ public class DistributorServlet extends HttpServlet {
             return;
         }
 
-        distributeur.commanderProduit(Integer.parseInt(productId));
+        try {
+            int id = Integer.parseInt(productId);
+            
+            if (distributeur.getProduit(id) == null) {
+                request.setAttribute("productError", "Le produit demandé n'existe pas");
+                return;
+            }
+            
+            if (!distributeur.creditSuffisant(id)) {
+                request.setAttribute("insufficientError", "Votre crédit est insuffisant");
+                return;
+            }
+
+            if (!distributeur.stockSuffisant(id)) {
+                request.setAttribute("productError", "Le produit n'est plus en stock");
+                return;
+            }
+
+            distributeur.commanderProduit(id);
+        } catch(Exception e) {
+            request.setAttribute("productError", "Une erreur est survenue lors de l'achat");
+        }
+        
     }
 
     private void setDistributorAttribute(HttpServletRequest request) {

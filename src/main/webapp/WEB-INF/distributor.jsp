@@ -17,7 +17,7 @@
                 <th>Quantité</th>
                 <th>Prix</th>
             </tr>
-            
+
             <c:forEach var="product" items="${stock}">
                 <tr>
                     <td><c:out value="${product.getId()}"/></td>
@@ -28,15 +28,21 @@
             </c:forEach>
 
         </table>
-        
+
         <br />
 
         <form method="POST">
             <fieldset>
                 <legend>Ajouter du crédit</legend>
-                <input type="submit" name="addOne" value="Ajouter 1" />
-                <input type="submit" name="addTwo" value="Ajouter 2" />
+                <p>
+                    <label>Montant : </label>
+                    <input type="number" name="credit" />
+                </p>
+                <input type="submit" value="Ajouter" />
             </fieldset>
+            <c:if test="${creditError != null}">
+                <p style="color:red;"><c:out value="${creditError}" /></p>
+            </c:if>
         </form>
 
         <br />
@@ -47,6 +53,12 @@
                 <input type="number" name="productId" />
                 <input type="submit" value="Acheter"/>
             </fieldset>
+            <c:if test="${productError != null}">
+                <p style="color:red;"><c:out value="${productError}" /></p>
+            </c:if>
+            <c:if test="${insufficientError != null}">
+                <p style="color:red;"><c:out value="${insufficientError}" /></p>
+            </c:if>
         </form>
 
     </body>
