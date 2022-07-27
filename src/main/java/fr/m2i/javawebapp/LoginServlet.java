@@ -37,12 +37,15 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // On récupère notre userDb depuis les attributs du servlet context (créé dans le LifecycleListener)
+        UserDb userDb = (UserDb) this.getServletContext().getAttribute("userDb");
+
         // On récupère les paramètres du formulaire
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         // On vérifie dans notre base de donnée qu'un user existe avec les identifiants envoyés
-        User user = UserDb.checkUser(email, password);
+        User user = userDb.checkUser(email, password);
 
         // Si le user est null, les identifiants sont invalides
         // On set le message d'erreur et on affiche la page de login
@@ -59,8 +62,8 @@ public class LoginServlet extends HttpServlet {
         // On stock le user connecter dans la session
         session.setAttribute("user", user);
 
-        // On affiche la page welcome
-        this.getServletContext().getRequestDispatcher("/WEB-INF/welcome.jsp").forward(request, response);
+        // On redirige vers la page d'accueil
+        response.sendRedirect("/java-web-app/HomeServlet");
     }
 
     /**
